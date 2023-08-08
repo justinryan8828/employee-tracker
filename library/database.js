@@ -1,4 +1,4 @@
-const mysql2 = require("mysql2");
+const mysql = require("mysql2");
 
 const db = mysql.createConnection(
   {
@@ -12,6 +12,8 @@ const db = mysql.createConnection(
   console.log(`Connected to the employee_tracker_db database.`)
 );
 
+const questions = require("./cli");
+
 // Selecting = getting
 
 function getAllDepartments() {
@@ -21,6 +23,7 @@ function getAllDepartments() {
     } else {
       console.log("\n");
       console.table(results);
+      //   questions();
     }
   });
 }
@@ -53,7 +56,7 @@ function getEmployeeInfo() {
 
 // ADD Department, Role and employee
 
-function addAllDepartment() {
+function addAllDepartment(name) {
   db.query(
     `INSERT INTO department (name) VALUES ("${name}");`,
     (err, results) => {
@@ -69,15 +72,7 @@ function addAllDepartment() {
 function addRoles() {
   db.query(
     `INSERT INTO role (title, salary, department_id) 
-    VALUES 
-    ("Sales Lead", 100000, 1),
-    ("Salesperson", 80000, 1),
-    ("Lead Engineer", 150000, 2),
-    ("Software Engineer", 120000, 2),
-    ("Account Manager", 160000, 3),
-    ("Accountant", 125000, 3),
-    ("Legal Team Lead", 250000, 4),
-    ("Lawyer", 190000, 4);;`,
+    VALUES ("${title}", ${salary}, ${department_id});`,
     (err, results) => {
       if (err) {
         console.error(err);
@@ -91,11 +86,7 @@ function addRoles() {
 function addEmployeeManager() {
   db.query(
     `INSERT INTO employee (first_name, last_name, role_id, manager_id)
-  VALUES 
-    ("John", "Doe", 1, null),
-    ("Ashley", "Rodriguez", 3, null),
-    ("Kunal", "Singh", 5, null),
-    ("Sarah", "Lourd", 7, null);`,
+  VALUES ("${first_name}", "${last_name}", ${role_id}, ${manager_id})`,
     (err, results) => {
       if (err) {
         console.error(err);
@@ -109,10 +100,7 @@ function addEmployeeManager() {
 function addEmployeeStaff() {
   db.query(
     `INSERT INTO employee (first_name, last_name, role_id, manager_id)
-  VALUES ("Mike", "Chan", 2, 1),
-         ("Kevin", "Tupik", 4, 2),
-         ("Malia", "Brown", 6, 3),
-         ("Tom", "Allen", 8, 4);`,
+  VALUES ("${first_name}", "${last_name}", ${role_id}, ${manager_id});`,
     (err, results) => {
       if (err) {
         console.error(err);
@@ -122,3 +110,9 @@ function addEmployeeStaff() {
     }
   );
 }
+
+// module.exports = { addAllDepartment };
+exports.addAllDepartment = addAllDepartment
+exports.getRoles = getRoles
+exports.getEmployeeInfo = getEmployeeInfo
+exports.getAllDepartments = getAllDepartments

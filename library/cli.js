@@ -1,107 +1,69 @@
 const inquirer = require("inquirer");
+const mysql = require("mysql2");
+const { prompt } = require("inquirer");
+const database = require("./database.js");
 
-const questions = [
-  {
-    message: "What would you like to do?",
-    name: "firstSelection",
-    type: "list",
-    choices: [
-      "View all departments",
-      "View all roles",
-      "View all employees",
-      "Add a department",
-      "Add a role",
-      "Add an employee",
-      "Update Employee Role",
-      "Quit",
-    ],
-  },
 
-  // New department
-  {
-    message: "What is the name of the new department?",
-    name: "newDepartment",
-    type: "input",
-    when: function (answers) {
-      return answers.firstSelection === "Add a department";
+function newDepartment() {
+  prompt([
+    {
+      message: "What do you want the departments name to be?",
+      name: "departmentName",
+      type: "input",
     },
-  },
+  ]).then((res) => {
+    let name = res.departmentName;
+    database.addAllDepartment(name)
+    questions();
+  });
+}
 
-  // Add a new role
-
-  {
-    message: "What is the name of the new role?",
-    name: "newRolename",
-    type: "input",
-    when: function (answers) {
-      return answers.firstSelection === "Add a role";
+function questions() {
+  prompt([
+    {
+      message: "What would you like to do?",
+      name: "firstSelection",
+      type: "list",
+      choices: [
+        "View all departments",
+        "View all roles",
+        "View all employees",
+        "Add a department",
+        "Add a role",
+        "Add an employee",
+        "Update Employee Role",
+        "Quit",
+      ],
     },
-  },
 
-  {
-    message: "What is the salary of the new role?",
-    name: "newRoleSalary",
-    type: "input",
-    when: function (answers) {
-      return answers.firstSelection === "Add a role";
-    },
-  },
+  ]).then((res) => {
+    let choice = res.firstSelection;
+    switch (choice) {
 
-  {
-    message: "What is the department of the new role?",
-    name: "newRoleDepartment",
-    type: "input",
-    when: function (answers) {
-      return answers.firstSelection === "Add a role";
-    },
-  },
+      case "View all departments":
+        database.getAllDepartments();
+        break;
 
-  // Add a new employee
-  {
-    message: "What is the first name of the new employee?",
-    name: "employeeFirstName",
-    type: "input",
-    when: function (answers) {
-      return answers.firstSelection === "Add an employee";
-    },
-  },
+      case "View all roles":
+        database.getRoles();
+        break;
 
-  {
-    message: "What is the last name of the new employee?",
-    name: "employeeLastName",
-    type: "input",
-    when: function (answers) {
-      return answers.firstSelection === "Add an employee";
-    },
-  },
+      case "View all employees":
+        database.getEmployeeInfo();
+        break;
 
-  {
-    message: "What is the role of the new employee?",
-    name: "employeeRole",
-    type: "input",
-    when: function (answers) {
-      return answers.firstSelection === "Add an employee";
-    },
-  },
+      case "Add a department":
+        // call function for adding new department
+        newDepartment();
+        break;
 
-  {
-    message: "Who is the manager of the new employee?",
-    name: "employeeManager",
-    type: "input",
-    when: function (answers) {
-      return answers.firstSelection === "Add an employee";
-    },
-  },
+      case "newRoleName":
+        // call function for adding new role name
+        break;
+    }
+  });
+}
 
-  // Update employee role
 
-  {
-    message: "Which employees role do you want to update?",
-    name: "updateRole",
-    type: "list",
-    choices: [],
-    when: function (answers) {
-      return answers.firstSelection === "Update employee role";
-    },
-  },
-];
+
+questions();
