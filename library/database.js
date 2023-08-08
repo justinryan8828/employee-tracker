@@ -116,3 +116,4 @@ exports.addAllDepartment = addAllDepartment
 exports.getRoles = getRoles
 exports.getEmployeeInfo = getEmployeeInfo
 exports.getAllDepartments = getAllDepartments
+exports.addRoles = addRoles

@@ -18,6 +18,20 @@ function newDepartment() {
   });
 }
 
+function newRole() {
+  prompt([
+    {
+      message: "What is the new role name?",
+      name: "roleName",
+      type: "input",
+    },
+  ]).then((res) => {
+    let name = res.roleName;
+    database.addRoles(name)
+    questions();
+  });
+}
+
 function questions() {
   prompt([
     {
@@ -42,14 +56,17 @@ function questions() {
 
       case "View all departments":
         database.getAllDepartments();
+        questions();
         break;
 
       case "View all roles":
         database.getRoles();
+        questions();
         break;
 
       case "View all employees":
         database.getEmployeeInfo();
+        questions();
         break;
 
       case "Add a department":
@@ -59,6 +76,7 @@ function questions() {
 
       case "newRoleName":
         // call function for adding new role name
+        newRole();
         break;
     }
   });
